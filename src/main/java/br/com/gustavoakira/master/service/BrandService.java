@@ -29,13 +29,20 @@ public class BrandService {
 	}
 	
 	@Transactional()
-	public Brand saveBrand(Brand brand) {
+	public Brand saveBrand(Brand brand, Long id) throws NotFoundException {
+		if(id != 0) {
+			if(this.getOne(id) == null) {
+				throw new NotFoundException("brand with id "+id);
+			}else {
+				brand.setId(id);
+			}
+		}
 		return repository.save(brand);
 	}
 	
 	@Transactional
 	public String removeBrand(Long id) throws NotFoundException{
-		if(repository.findById(id) == null) {
+		if(repository.findById(id).isEmpty()) {
 			throw new NotFoundException("brand with id:"+id);
 		}
 		return "Ok";
