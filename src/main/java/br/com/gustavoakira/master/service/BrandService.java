@@ -1,13 +1,14 @@
 package br.com.gustavoakira.master.service;
 
+import java.util.Collections;
 import java.util.List;
-
-
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.gustavoakira.master.dto.BrandDTO;
 import br.com.gustavoakira.master.entities.Brand;
 import br.com.gustavoakira.master.repository.BrandRepository;
 import javassist.NotFoundException;
@@ -19,17 +20,18 @@ public class BrandService {
 	private BrandRepository repository;
 	
 	@Transactional(readOnly = true)
-	public List<Brand> getAll(){
-		return repository.findAll();
+	public List<BrandDTO> getAll(){
+		return repository.findAll().stream().map(x -> new BrandDTO(x)).collect(Collectors.toList());
 	}
 	
 	@Transactional(readOnly = true)
-	public Brand getOne(Long id) {
-		return repository.getOne(id);
+	public BrandDTO getOne(Long id) {
+		return new BrandDTO(repository.getOne(id));
 	}
 	
 	@Transactional()
-	public Brand saveBrand(Brand brand, Long id) throws NotFoundException {
+	public BrandDTO saveBrand(BrandDTO brandDTO, Long id) throws NotFoundException {
+		Brand brand = new Brand(brandDTO);
 		if(id != 0) {
 			if(this.getOne(id) == null) {
 				throw new NotFoundException("brand with id "+id);
@@ -37,7 +39,7 @@ public class BrandService {
 				brand.setId(id);
 			}
 		}
-		return repository.save(brand);
+		return new BrandDTO(repository.save(brand));
 	}
 	
 	@Transactional

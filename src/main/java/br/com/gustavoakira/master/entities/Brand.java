@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import br.com.gustavoakira.master.dto.BrandDTO;
+
 @Entity
 public class Brand  implements Serializable{
 	
@@ -23,12 +25,20 @@ public class Brand  implements Serializable{
 	public Brand() {
 	}
 	
+	public Brand(BrandDTO dto) {
+		this.name = dto.getName();
+	}
 
 	public Brand(Long id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 	}
+
+	public Brand(String name) {
+		this.name = name;
+	}
+
 
 	public Long getId() {
 		return id;
